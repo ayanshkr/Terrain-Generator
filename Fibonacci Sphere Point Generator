@@ -1,0 +1,9 @@
+import torch as t
+def fibonacci_sphere(n=1000):
+  GOLDEN_ANGLE = 4*t.pi/(1+5**0.5)
+  theta_angle = t.arange(0,GOLDEN_ANGLE*n,GOLDEN_ANGLE)
+  z = t.arange(-1,1+2/n,2/(n-1))
+  rs = t.sqrt(1-z*z)
+  x = t.cos(theta_angle)*rs
+  y = t.sin(theta_angle)*rs
+  return t.stack([x,y,z],dim=-1)
