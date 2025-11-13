@@ -1,9 +1,18 @@
-import torch as t
-def fibonacci_sphere(n=1000):
-  GOLDEN_ANGLE = 4*t.pi/(1+5**0.5)
-  theta_angle = t.arange(0,GOLDEN_ANGLE*n,GOLDEN_ANGLE)
-  z = t.arange(-1,1+2/n,2/(n-1))
-  rs = t.sqrt(1-z*z)
-  x = t.cos(theta_angle)*rs
-  y = t.sin(theta_angle)*rs
-  return t.stack([x,y,z],dim=-1)
+import numpy as np
+import math
+from numba import jit
+@jit(nopython=True, fastmath=True)
+def fibonacci_sphere_jit(n):
+    points = np.empty((n, 3))
+    GOLDEN_ANGLE = math.pi * (math.sqrt(5.0) + 1.0)
+    STEP = 2.0 / (n - 1.0)
+    for i in range(n):
+      z = i * STEP - 1.0
+      r = math.sqrt(1.0 - z * z)
+      t = i * GOLDEN_ANGLE
+      x = math.cos(t) * r
+      y = math.sin(t) * r
+      points[i, 0] = x
+      points[i, 1] = y
+      points[i, 2] = z
+    return points
